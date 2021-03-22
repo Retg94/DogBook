@@ -45,7 +45,8 @@ export default class UserPage extends React.Component {
                 present: present,
                 imgUrl: imgUrl
             })
-            //console.log("Changed")
+
+            console.log("Changed")
         }
     }
 
@@ -152,6 +153,23 @@ export default class UserPage extends React.Component {
             console.log("Error deleting dog")
         }
     }
+    renderLinkToEdit(Key, DogName, NickName, Age, Bio, Friends, Present, ImgUrl){
+        return(
+            <Link to={{
+                pathname: `/edit`,
+                state: {
+                    key: Key,
+                    dogName: DogName,
+                    nickName: NickName,
+                    age: Age,
+                    bio: Bio,
+                    friends: Friends,
+                    present: Present,
+                    imgUrl: ImgUrl
+                }
+            }}>Edit</Link>
+        )
+    }
     
     renderFriendList(friends) {
         let result = ""
@@ -198,19 +216,7 @@ export default class UserPage extends React.Component {
                     <p>Age: {this.state.age}</p>
                     <p>Bio: {this.state.bio}</p>
                     <p>
-                        <Link to={{
-                                    pathname: `/edit`,
-                                    state: {
-                                        key: this.state.key,
-                                        dogName: this.state.dogName,
-                                        nickName: this.state.nickName,
-                                        age: this.state.age,
-                                        bio: this.state.bio,
-                                        friends: this.state.friends,
-                                        present: this.state.present,
-                                        imgUrl: this.state.imgUrl
-                                    }
-                            }}>Edit</Link>
+                        {this.renderLinkToEdit(this.state.key, this.state.dogName, this.state.nickName, this.state.age, this.state.bio, this.state.friends, this.state.present, this.state.imgUrl)}
                     </p>
                     <p>
                         <Link to="/">home</Link>

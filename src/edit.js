@@ -16,6 +16,34 @@ function returnOptions (dogs, currentKey, friends) {
     optionsArr.unshift(<option key="firstOption" value="">Add new friend</option>)
     return optionsArr;
 }
+function getDogFromIdAndAddFriend(id, friendId, dogs) {
+    let tmpDog = "";
+
+    dogs.forEach(element => {
+        if(element.key==id){
+            tmpDog=element;
+        }
+    });
+    tmpDog.friends.push(friendId)
+    return tmpDog;
+}
+function renderLinkToProfile(Key, DogName, NickName, Age, Bio, Friends, Present, ImgUrl){
+    return(
+        <Link to={{
+            pathname: `/profile`,
+            state: {
+                key: Key,
+                dogName: DogName,
+                nickName: NickName,
+                age: Age,
+                bio: Bio,
+                friends: Friends,
+                present: Present,
+                imgUrl: ImgUrl
+            }
+        }}><p>Back to profile</p></Link>
+    )
+}
 
 export default function EditInfo(props) {
     const dogs = props.dogs;
@@ -29,9 +57,17 @@ export default function EditInfo(props) {
         let tmpBio = dogForm.bio.value;   
     
         const selectElement = document.getElementById("selectFriend");
+
+        let friendDog = "";
+        
         let tmpFriends = friends;
-        if(selectElement.value!=="")
+        if(selectElement.value!==""){ //Add this dog to selected dog's friendlist
             tmpFriends.push(selectElement.value);
+            friendDog = getDogFromIdAndAddFriend(selectElement.value, tmpKey, dogs)
+            let deleteIndex = dogs.findIndex(element => element.key===friendDog.key)
+            dogs.splice(deleteIndex, 1)
+            dogs.push(friendDog)
+        }
     
         let newDog = {
             key: tmpKey,
@@ -84,20 +120,7 @@ export default function EditInfo(props) {
 
 
             </form>
-            <Link to={{
-                        pathname: `/profile`,
-                        state: {
-                            key: props.location.state.key,
-                            dogName: props.location.state.dogName,
-                            nickName: props.location.state.nickName,
-                            age: props.location.state.age,
-                            bio: props.location.state.bio,
-                            friends: props.location.state.friends,
-                            present: props.location.state.present,
-                            imgUrl: props.location.state.imgUrl
-                        }
-                    }}><p>Back to profile</p>
-            </Link>
+            {renderLinkToProfile(props.location.state.key, props.location.state.dogName, props.location.state.nickName, props.location.state.age, props.location.state.bio, props.location.state.friends, props.location.state.present, props.location.state.imgUrl)}
             <p>
                 <Link to="/">Back to homepage</Link>
             </p>
